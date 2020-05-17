@@ -29,7 +29,7 @@ Examples how this tag is compiled into PHP:
 
 | ViewLanguage Example | PHP Translation |
 | --- | --- |
-| <escape><br/>${foo.bar}<br/></escape> | ${foo.bar} |
+| &lt;escape&gt;<br/>${foo.bar}<br/>&lt;/escape&gt; | ${foo.bar} |
 
 ## import
 
@@ -41,66 +41,33 @@ Includes another view language template into current one. Syntax:
 
 Attributes:
 
-| Name | Description | Mandatory | Data Type |
+| Name | Mandatory | Data Type | Description |
 | --- | --- | --- | --- |
-| file | Name of file whose sources should replace tag declaration. File will be located using extension & template folder supplied to compiler. When sources are parsed, same operation repeats recursively until no import tags are left. | Y | string |
+| file | Y | string | Name of file whose sources should replace tag declaration. File will be located using extension & template folder supplied to compiler. When sources are parsed, same operation repeats recursively until no import tags are left. |
+
+Example:
+
+```html
+<import file="header"/>
+```
 
 ## namespace
 
 Marks custom location of user defined tag library. Syntax:
 
 ```html
-&lt;namespace taglib="..." folder="..."/&gt;
+<namespace taglib="..." folder="..."/>
 ```
 
 Attributes:
 
- <table>
-     <thead>
+| Name | Mandatory | Data Type | Description |
+| --- | --- | --- | --- |
+| taglib | Y | string | Name of tag library to look for. |
+| folder | Y | string | Location on disk (absolute or relative to project) where to look for tags (files) in library. |
 
-     <tr>
-         <td>
-             NAME
-         </td>
-         <td>
-             DESCRIPTION
-         </td>
-         <td>
-             MANDATORY
-         </td>
-         <td>
-             DATA TYPE
-         </td>
-     </tr>
-     </thead>
-     <tbody>
-     <tr>
-         <td>
-             taglib
-         </td>
-         <td>
-             Name of tag library to look for.
-         </td>
-         <td>
-             Y
-         </td>
-         <td>
-             STRING
-         </td>
-     </tr>
-     <tr>
-         <td>
-             folder
-         </td>
-         <td>
-             Location on disk (absolute or relative to project) where to look for tags (files) in library.
-         </td>
-         <td>
-             Y
-         </td>
-         <td>
-             STRING
-         </td>
-     </tr>
-     </tbody>
- </table>
+Example:
+
+```html
+<namespace taglib="foo" folder="bar"/>
+```
