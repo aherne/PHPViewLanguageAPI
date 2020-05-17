@@ -14,9 +14,9 @@ where **variableName** can be:
 
 A very powerful feature is the **ability to nest expressions**: writing expressions whose key(s) are expressions themselves. This can go at any depth and it is very useful when iterating through more than one list and linking a one to another's key/value association! Example: 
 ```html
-<span>${foo.bar.${baz}}</span>
+${foo.bar.${baz}}
 ```
 which in PHP translates to:
 ```php
-<span>echo $foo["bar"][$baz];</span>
+$foo["bar"][$baz]
 ```
