@@ -1,5 +1,19 @@
 # View Language API
 
+Table of contents:
+
+- About
+    - [expressions](#expressions)
+    - [tags](#tags)
+- [configuration](#configuration)
+- [compilation](#compilation)
+- [installation](#installation)
+- [unit tests](#unit-tests)
+- [unit tests](#unit-tests)
+- [reference guide](#reference-guide)
+
+## About 
+
 This API is the PHP compiler for ViewLanguage templating engine, a markup language inspired by JSP&JSTL @ Java that acts like an extension of HTML standard, designed to completely eliminate the need for scripting in views by:
 
 - interfacing variables through **[expressions](#expressions)**.
@@ -17,7 +31,7 @@ API is fully PSR-4 compliant, only requiring PHP7.1+ interpreter and SimpleXML e
 - **[examples](#examples)**: shows an example how to template with ViewLanguage, including explanations for each step
 - **[reference guide](#reference-guide)**: shows list of tags that come with API
 
-## Expressions
+### Expressions
 
 An **expression** is a ViewLanguage representation of a *scripting variable*. Syntax for an expression is:
 
@@ -39,7 +53,7 @@ A very powerful feature is the **ability to nest expressions**: writing expressi
 | --- | --- |
 | ${foo.bar.${baz}} | $foo["bar"][$baz] |
 
-## Tags
+### Tags
 
 A **tag** is a ViewLanguage representation of a *scripting logic*. All tags act like an extension of HTML standard and as such they have names and optionally attributes and bodies. There are two types of tags known by ViewLanguage:
 
@@ -48,7 +62,7 @@ A **tag** is a ViewLanguage representation of a *scripting logic*. All tags act 
 
 A very powerful feature is the **ability of tags to be recursive**: it is allowed to put View Language tags inside View Language tags. Whenever that happens, compiler goes progressively deeper until no tags are left!
 
-### Macro Tags
+#### Macro Tags
 
 **Macro tags** work in a way similar to C macros: before code is compiled, they are read and "expanded" so that compilation will run on a full source. Syntax is identical to that of normal HTML tags:
 
@@ -68,7 +82,7 @@ API defines following macro tags:
 
 At the moment, it is not possible for users to define their own macro tags!
 
-### Library Tags
+#### Library Tags
 
 **Library tags** are compilable api/user-defined HTML snippets expected to implement scripting logic in a View Language application. They are non-static repeating snippets of template (html) code that depend on variables and thus can't be loaded using <include>.
  
@@ -94,7 +108,7 @@ Where:
     - Value can only be primitive (string or number) or ViewLanguage expressions.
     - Unlike standard HTML, attributes cannot be multilined currently.
     
-#### Standard Tags
+##### Standard Tags
 API includes a **standard library** containing tags for programming language instructions where *LIBRARY* is empty:
 
 - [:for](#tag-for): iterates numerically through a list
@@ -113,7 +127,7 @@ Standard tags work with *ATTRIBUTE* values of following types:
 - *EXPRESSION*: ViewLanguage expressions. If helper functions are used as attribute values, they must be left undecorated: *count(${asd})* instead of *${count(${asd})}*.
 - *CONDITION*: syntax is expected to be C-like, but ultimately matches that of language code is compiled into (in our case, PHP). Example: *${x}==true* means in PHP *$x==true*.
 
-#### User Defined Tags
+##### User Defined Tags
 
 In order to break up HTML response into discrete units, developers must create their own libraries & tags. User defined tags are found on disk according to these rules:
 
