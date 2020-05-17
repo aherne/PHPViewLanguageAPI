@@ -1,22 +1,22 @@
-These are tags that work in a way similar to C macros: before code is compiled, they are read and "expanded" so that compilation will run on a full source. Syntax is identical to that of normal HTML tags:
+**Macro tags** work in a way similar to C macros: before code is compiled, they are read and "expanded" so that compilation will run on a full source. Syntax is identical to that of normal HTML tags:
 
 ```html
 <NAME ATTRIBUTE="value" .../>
 ```
 Where:
 
-- <i>NAME</i>: name of tag that performs a single logical operation.
-- <i>ATTRIBUTE</i>: configures tag behavior
+- **NAME**: name of tag that performs a single logical operation.
+- **ATTRIBUTE**: configures tag behavior
 
 API defines following macro tags:
 
-- <a href="/view-language/macro-tags#escape">escape</a>: tag whose body will be ignored by compiler. This is necessary to mark content inside as not subject to parsing.
-- <a href="/view-language/macro-tags#import">import</a>: tag whose declaration will be replaced by compiler with the body of file pointed by its "file" attribute. This is crucial for layouting/templating. 
-- <a href="/view-language/macro-tags#namespace">namespace</a>: tag whose declaration will inform compiler where to look for tag libraries not found in default folder. 
+- [escape](#tag-escape): tag whose body will be ignored by compiler. This is necessary to mark content inside as not subject to parsing.
+- [import](#tag-import): tag whose declaration will be replaced by compiler with the body of file pointed by its "file" attribute. This is crucial for layouting/templating. 
+- [namespace](#tag-namespace): tag whose declaration will inform compiler where to look for tag libraries not found in default folder. 
 
 At the moment, it is not possible for users to define their own macro tags!
 
-## escape
+## tag escape
 
 Marks tag body to be ignored by ViewLanguage compiler.Syntax:
 
@@ -32,7 +32,7 @@ Examples how this tag is compiled into PHP:
 | --- | --- |
 | &lt;escape&gt;<br/>${foo.bar}<br/>&lt;/escape&gt; | ${foo.bar} |
 
-## import
+## tag import
 
 Includes another view language template into current one. Syntax:
 
@@ -53,7 +53,7 @@ Examples how this tag is compiled into PHP:
 | --- | --- |
 | &lt;import file="header"/&gt; | require_once($viewsFolder."/header.html") |
 
-## namespace
+## tag namespace
 
 Marks custom location of user defined tag library (must be placed BEFORE latter declaration). Syntax:
 

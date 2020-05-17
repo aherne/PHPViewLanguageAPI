@@ -1,4 +1,4 @@
-An expression is a ViewLanguage representation of a *scripting variable*. Syntax for an expression is:
+An **expression** is a ViewLanguage representation of a *scripting variable*. Syntax for an expression is:
 
 ```html
 ${variableName}
@@ -12,11 +12,8 @@ where **variableName** can be:
 | a back-end helper function (native or user-defined) | ${htmlspecialchars(${foo.bar})} | htmlspecialchars($foo["bar"]) |
 | a short if using ternary operators | ${(${foo.bar}!=3?"Y":"N")} | ($foo["bar"]!=3?"Y":"N") |
 
-A very powerful feature is the **ability to nest expressions**: writing expressions whose key(s) are expressions themselves. This can go at any depth and it is very useful when iterating through more than one list and linking a one to another's key/value association! Example: 
-```html
-${foo.bar.${baz}}
-```
-which in PHP translates to:
-```php
-$foo["bar"][$baz]
-```
+A very powerful feature is the **ability to nest expressions**: writing expressions whose key(s) are expressions themselves. This can go at any depth and it is very useful when iterating through more than one list and linking a one to another's key/value association:
+
+| ViewLanguage Example | PHP Translation |
+| --- | --- |
+| ${foo.bar.${baz}} | $foo["bar"][$baz] |
