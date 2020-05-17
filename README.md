@@ -2,8 +2,8 @@
 
 This API is the PHP compiler for ViewLanguage templating engine, a markup language inspired by JSP&JSTL @ Java that acts like an extension of HTML standard, designed to completely eliminate the need for scripting in views by:
 
-- interfacing variables through **[expressions](https://www.lucinda-framework.com/view-language/expressions)**.
-- interfacing logics (control structures, repeating html segments) through **[tags](https://www.lucinda-framework.com/view-language/tags)**
+- interfacing variables through **[expressions](#expressions)**.
+- interfacing logics (control structures, repeating html segments) through **[tags](#tags)**
 
 In order to achieve its goals, following steps need to be observed:
 
@@ -14,9 +14,115 @@ API is fully PSR-4 compliant, only requiring PHP7.1+ interpreter and SimpleXML e
 
 - **[installation](#installation)**: describes how to install API on your computer, in light of steps above
 - **[unit tests](#unit-tests)**: API has 100% Unit Test coverage, using [UnitTest API](https://github.com/aherne/unit-testing) instead of PHPUnit for greater flexibility
-- **[expressions](https://www.lucinda-framework.com/view-language/expressions)**: shows how to define variables in ViewLanguage and how are they resolved to PHP
-- **[tags](https://www.lucinda-framework.com/view-language/tags)**: shows how to use control structures and extend HTML standard with parameterized tags
 - **[examples](#examples)**: shows an example how to template with ViewLanguage, including explanations for each step
+- **[reference guide](#reference-guide)**: shows list of tags that come with API
+
+## Expressions
+
+An **expression** is a ViewLanguage representation of a *scripting variable*. Syntax for an expression is:
+
+```html
+${variableName}
+```
+where **variableName** can be:
+
+| Description | ViewLanguage Example | PHP Translation |
+| --- | --- | --- |
+| a scalar variable | ${foo} | $foo |
+| an array variable, where hierarchy is represented by dots | ${foo.bar} | $foo["bar"] |
+| a back-end helper function (native or user-defined) | ${htmlspecialchars(${foo.bar})} | htmlspecialchars($foo["bar"]) |
+| a short if using ternary operators | ${(${foo.bar}!=3?"Y":"N")} | ($foo["bar"]!=3?"Y":"N") |
+
+A very powerful feature is the **ability to nest expressions**: writing expressions whose key(s) are expressions themselves. This can go at any depth and it is very useful when iterating through more than one list and linking a one to another's key/value association:
+
+| ViewLanguage Example | PHP Translation |
+| --- | --- |
+| ${foo.bar.${baz}} | $foo["bar"][$baz] |
+
+## Tags
+
+A **tag** is a ViewLanguage representation of a *scripting logic*. All tags act like an extension of HTML standard and as such they have names and optionally attributes and bodies. There are two types of tags known by ViewLanguage:
+
+- [macro tags](#macro-tags): api-defined tags to be processed before content is compiled.
+- [library tags](#library-tags): api/user-defined tags subject to compilation that belong to a library and have an unique name within that library.
+
+A very powerful feature is the **ability of tags to be recursive**: it is allowed to put View Language tags inside View Language tags. Whenever that happens, compiler goes progressively deeper until no tags are left!
+
+### Macro Tags
+
+**Macro tags** work in a way similar to C macros: before code is compiled, they are read and "expanded" so that compilation will run on a full source. Syntax is identical to that of normal HTML tags:
+
+```html
+<NAME ATTRIBUTE="value" .../>
+```
+Where:
+
+- **NAME**: name of tag that performs a single logical operation.
+- **ATTRIBUTE**: configures tag behavior
+
+API defines following macro tags:
+
+- [escape](#tag-escape): tag whose body will be ignored by compiler. This is necessary to mark content inside as not subject to parsing.
+- [import](#tag-import): tag whose declaration will be replaced by compiler with the body of file pointed by its "file" attribute. This is crucial for layouting/templating. 
+- [namespace](#tag-namespace): tag whose declaration will inform compiler where to look for tag libraries not found in default folder. 
+
+At the moment, it is not possible for users to define their own macro tags!
+
+### Library Tags
+
+**Library tags** are compilable api/user-defined HTML snippets expected to implement scripting logic in a View Language application. They are non-static repeating snippets of template (html) code that depend on variables and thus can't be loaded using <include>.
+ 
+Their syntax extends HTML standard:
+```html
+<LIBRARY:TAG ATTRIBUTE="value" ...>...</LIBRARY:TAG>
+```
+or, if they have no body:
+```html
+<LIBRARY:TAG ATTRIBUTE="value" .../>
+```
+
+Where:
+- *LIBRARY*: namespace that contains related logical operations to perform on a template. Rules:
+    - Value must be lowercase and alphanumeric.
+    - "-" sign is allowed as well to replace spaces in multi-word values
+- *TAG*: name of tag that performs a single logical operation.Rules:
+    - Value must be lowercase and alphanumeric.
+    - sign is allowed as well to replace spaces in multi-word values
+- *ATTRIBUTE*: configures tag behavior (can be zero or more). Rules:
+    - Name must be lowercase and alphanumeric.
+    - "_" sign is allowed as well to replace spaces in multi-word names
+    - Value can only be primitive (string or number) or ViewLanguage expressions.
+    - Unlike standard HTML, attributes cannot be multilined currently.
+    
+#### Standard Tags
+API includes a **standard library** containing tags for programming language instructions where *LIBRARY* is empty:
+
+- [:for](#tag-for): iterates numerically through a list
+- [:foreach](#tag-foreach): iterates through a dictionary by key and value
+- [:if](#tag-if): evaluates body fitting condition
+- [:elseif](#tag-elseif): evaluates body fitting condition that did not met previous if/elseif.
+- [:else](#tag-else): evaluates body that did not met previous if/else if
+- [:set](#tag-set): creates a variable and/or sets a value for it.
+- [:unset](#tag-unset): unsets a variable.
+- [:while](#tag-while): performs a loop on condition.
+- [:break](#tag-break): ends loop.
+- [:continue](#tag-continue): skips evaluating the rest of current loop and moves to next iteration.
+
+Standard tags work with *ATTRIBUTE* values of following types:
+- *scalars*: strings or integers
+- *EXPRESSION*: ViewLanguage expressions. If helper functions are used as attribute values, they must be left undecorated: *count(${asd})* instead of *${count(${asd})}*.
+- *CONDITION*: syntax is expected to be C-like, but ultimately matches that of language code is compiled into (in our case, PHP). Example: *${x}==true* means in PHP *$x==true*.
+
+#### User Defined Tags
+
+In order to break up HTML response into discrete units, developers must create their own libraries & tags. User defined tags are found on disk according to these rules:
+
+- library name must be a folder inside tags folder supplied on compilation
+- tag code muse be a HTML file inside library folder whose name equals *name*
+
+| ViewLanguage Example | PHP Translation |
+| --- | --- |
+| <foo:baz attr="1"/> | $contents = file_get_contents($tagsFolder."/foo/baz.html"); <br/>// replaces all occurrences of $[attr] with 1 |
 
 ## Configuration
 
@@ -223,3 +329,277 @@ Then above file is loaded in output buffer and bound with $data, so the final HT
     </body>
 </html/>
 ```
+
+## Reference Guide
+
+This is a reference tags describing all tags that come along with API.
+
+### tag escape
+
+Marks tag body to be ignored by ViewLanguage compiler.Syntax:
+
+```html
+<escape>
+...
+</escape>
+```
+
+Examples how this tag is compiled into PHP:
+
+| ViewLanguage Example | PHP Translation |
+| --- | --- |
+| &lt;escape&gt;<br/>${foo.bar}<br/>&lt;/escape&gt; | ${foo.bar} |
+
+### tag import
+
+Includes another view language template into current one. Syntax:
+
+```html
+<import file="..."/>
+```
+
+Attributes:
+
+| Name | Mandatory | Data Type | Description |
+| --- | --- | --- | --- |
+| file | Y | string | Location of file whose sources should replace tag declaration relative to views folder supplied to compiler |
+
+
+Examples how this tag is compiled into PHP:
+
+| ViewLanguage Example | PHP Translation |
+| --- | --- |
+| &lt;import file="header"/&gt; | require_once($viewsFolder."/header.html") |
+
+### tag namespace
+
+Marks custom location of user defined tag library (must be placed BEFORE latter declaration). Syntax:
+
+```html
+<namespace taglib="..." folder="..."/>
+```
+
+Attributes:
+
+| Name | Mandatory | Data Type | Description |
+| --- | --- | --- | --- |
+| taglib | Y | string | Name of tag library to look for. |
+| folder | Y | string | Location of folder tag library should be looked for relative to tags folder supplied to compiler |
+
+Examples how this tag is compiled into PHP:
+
+| ViewLanguage Example | PHP Translation |
+| --- | --- |
+| &lt;namespace taglib="foo" folder="bar"/&gt;<br/>...<br/>&lt;foo:baz attr="1"/&gt; | ...<br/>$contents = file_get_contents($tagsFolder."/bar/foo/baz.html"); <br/>// replaces all instances of $[attr] with 1 |
+
+
+### tag :for
+
+Creates a FOR loop. Syntax:
+
+```html
+<:for var="..." start="..." end="..." (step="...")>
+    ...
+</:for>
+```
+
+Attributes:
+
+| Name | Mandatory | Data Type | Description |
+| --- | --- | --- | --- |
+| var | Y | string | Name of counter variable. |
+| start | Y | integer | Value of begin counter. |
+| end | Y | integer | Value of end counter. |
+| step | N | integer | Value of increment/decrement step (default: 1). |
+
+Examples how this tag is compiled into PHP:
+
+| ViewLanguage Example | PHP Translation |
+| --- | --- |
+| &lt;:for var="i" start="0" end="10"&gt;<br/>...<br/>&lt;/:for&gt; | for($i=0; $i<=10; $i=$i+1){<br/>...<br/>} |
+| &lt;:for var="i" start="10" end="0" step="-1"&gt;<br/>...<br/>&lt;/:for&gt; | for($i=10; $i>=0; $i=$i-1){<br/>...<br/>} |
+
+### tag :foreach
+
+Creates a FOR EACH loop. Syntax:
+
+```html
+<:foreach var="..." (key="...") val="...">
+    ...
+</:foreach>
+```
+
+Attributes:
+
+| Name | Mandatory | Data Type | Description |
+| --- | --- | --- | --- |
+| var | Y | EXPRESSION | Variable to iterate. |
+| key | N | string | Name of key variable. |
+| val | Y | string | Name of value variable. |
+
+Examples how this tag is compiled into PHP:
+
+| ViewLanguage Example | PHP Translation |
+| --- | --- |
+| &lt;:foreach var="${a}" key="k" val="v"&gt;<br/>...<br/>&lt;/:foreach&gt; | foreach($a as $k=>$v) {<br/>...<br/>} |
+| &lt;:foreach var="${a}" val="v"&gt;<br/>...<br/>&lt;/:foreach&gt; | foreach($a as $v) {<br/>...<br/>} |
+
+
+### tag :if
+
+Creates an IF condition. Syntax:
+
+```html
+<:if test="...">
+    ...
+</:if>
+```
+
+Tag must not be closed if folowed by a [:else](#tag-else) or [:elseif](#tag-elseif)!
+
+Attributes:
+
+| Name | Mandatory | Data Type | Description |
+| --- | --- | --- | --- |
+| test | Y | CONDITION | Condition when body is executed. |
+
+Examples how this tag is compiled into PHP:
+
+| ViewLanguage Example | PHP Translation |
+| --- | --- |
+| &lt;:if test="${x}==2"&gt;<br/>...<br/>&lt;/:if&gt; | if($x==2) {<br/>...<br/>} |
+
+<i>You can also run simple IF/ELSE statements from expressions using ternary operators!</i>
+
+### tag :elseif
+
+Creates an ELSE IF condition. Syntax:
+
+```html
+<:elseif test="...">
+    ...
+</:if>
+```
+
+Tag must not be closed if folowed by a [:else](#tag-else) or [:elseif](#tag-elseif)!
+
+Attributes:
+
+| Name | Mandatory | Data Type | Description |
+| --- | --- | --- | --- |
+| test | Y | CONDITION | Condition when body is executed. |
+
+Examples how this tag is compiled into PHP:
+
+| ViewLanguage Example | PHP Translation |
+| --- | --- |
+| &lt;:elseif test="${x}==2"&gt;<br/>...<br/>&lt;/:if&gt; | } elseif($x==2) {<br/>...<br/>} |
+
+### tag :else
+
+Creates an ELSE condition. Syntax:
+
+```html
+<:else>
+    ...
+</:if>
+```
+
+Examples how this tag is compiled into PHP:
+
+| ViewLanguage Example | PHP Translation |
+| --- | --- |
+| &lt;:else&gt;<br/>...<br/>&lt;/:if&gt; | } else {<br/>...<br/>} |
+
+### tag :set
+
+Sets a value to a variable.Syntax:
+
+```html
+<:set var="..." val="..."/>
+```
+
+Attributes:
+
+| Name | Mandatory | Data Type | Description |
+| --- | --- | --- | --- |
+| var | Y | string | Name of variable to be created/updated. |
+| val | Y | string<br/>EXPRESSION | Value of variable. |
+
+Examples how this tag is compiled into PHP:
+
+| ViewLanguage Example | PHP Translation |
+| --- | --- |
+| &lt;:set var="a" val="10" | $a = 10; |
+| &lt;:set var="a" val="${x}" | $a = $x; |
+
+### tag :unset
+
+Removes variable from memory. Syntax:
+
+```html
+<:unset var="..."/>
+```
+
+Attributes:
+
+| Name | Mandatory | Data Type | Description |
+| --- | --- | --- | --- |
+| var | Y | string | Name of variable to be unset. |
+
+
+Examples how this tag is compiled into PHP:
+
+| ViewLanguage Example | PHP Translation |
+| --- | --- |
+| &lt;:unset var="a" | unset($a); |
+
+### tag :while
+
+Creates a WHILE loop. Syntax:
+
+```html
+<:while test="...">
+    ...
+</:while>
+```
+
+Attributes:
+
+| Name | Mandatory | Data Type | Description |
+| --- | --- | --- | --- |
+| test | Y | CONDITION | Condition when body is executed. |
+
+Examples how this tag is compiled into PHP:
+
+| ViewLanguage Example | PHP Translation |
+| --- | --- |
+| &lt;:while test="${x}!=2"&gt;<br/>...<br/>&lt;/:while&gt; | while($x!=2) {<br/>...<br/>} |
+
+### tag :break
+
+Breaks a FOR/FOR EACH/WHILE statement loop. Syntax:
+
+```html
+<:break/>
+```
+
+Examples how this tag is compiled into PHP:
+
+| ViewLanguage Example | PHP Translation |
+| --- | --- |
+| &lt;:break/:while&gt; | break; |
+
+### tag :continue
+
+Continues to next step within a FOR/FOR EACH/WHILE statement loop. Syntax:
+
+```html
+<:continue/>
+```
+
+Examples how this tag is compiled into PHP:
+
+| ViewLanguage Example | PHP Translation |
+| --- | --- |
+| &lt;:break/:while&gt; | break; |
