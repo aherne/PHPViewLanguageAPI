@@ -2,11 +2,11 @@
  
 Their syntax extends HTML standard:
 ```html
-&lt;library:name attribute="value" ...&gt;...&lt;/library:tag&gt;
+<library:name attribute="value" ...>...</library:tag>
 ```
 or, if they have no body:
 ```html
-&lt;library:name attribute="value" .../&gt;
+<library:name attribute="value" .../>
 ```
 
 Where:
@@ -47,15 +47,15 @@ In order to break up HTML response into discrete units, developers must create t
 
 | ViewLanguage Example | PHP Translation |
 | --- | --- |
-| &lt;foo:baz attr="1"/&gt; | $contents = file_get_contents($tagsFolder."/foo/baz.html"); <br/>// replaces attributes with values |
+| <foo:baz attr="1"/> | $contents = file_get_contents($tagsFolder."/foo/baz.html"); <br/>// replaces attributes with values |
 
 ## tag :for
 Creates a FOR loop.
 Syntax:
 ```html
-&lt;:for var="..." start="..." end="..." (step="...")&gt;
+<:for var="..." start="..." end="..." (step="...")>
     ...
-&lt;/:for&gt;
+</:for>
 ```
 Attributes:
 <table>
@@ -155,14 +155,14 @@ Examples how this tag is compiled into PHP:
     <tr>
         <td>
             ```html
-&lt;:for var="i" start="0" end="10"&gt;
+<:for var="i" start="0" end="10">
     ...
-&lt;/:for&gt;
+</:for>
 ```
         </td>
         <td>
             ```php
-for($i=0; $i&lt;=10; $i=$i+1){
+for($i=0; $i<=10; $i=$i+1){
     ...
 }
 ```
@@ -171,14 +171,14 @@ for($i=0; $i&lt;=10; $i=$i+1){
     <tr>
         <td>
             ```html
-&lt;:for var="i" start="10" end="0" step="-2"&gt;
+<:for var="i" start="10" end="0" step="-2">
     ...
-&lt;/:for&gt;
+</:for>
 ```
         </td>
         <td>
             ```php
-for($i=10; $i&gt;=0; $i=$i-2) {
+for($i=10; $i>=0; $i=$i-2) {
     ...
 }
 ```
@@ -192,9 +192,9 @@ Creates a FOR EACH loop.
 
 Syntax:
 ```html
-&lt;:foreach var="..." (key="...") val="..."&gt;
+<:foreach var="..." (key="...") val="...">
     ...
-&lt;/:foreach&gt;
+</:foreach>
 ```
 Attributes:
 <table>
@@ -266,14 +266,14 @@ Examples how this tag is compiled into PHP:
     <tr>
         <td>
             ```html
-&lt;:foreach var="${a}" key="k" val="v"&gt;
+<:foreach var="${a}" key="k" val="v">
     ...
-&lt;/:foreach&gt;
+</:foreach>
 ```
         </td>
         <td>
             ```php
-foreach($a as $k=&gt;$v) {
+foreach($a as $k=>$v) {
     ...
 }
 ```
@@ -282,9 +282,9 @@ foreach($a as $k=&gt;$v) {
     <tr>
         <td>
             ```html
-&lt;:foreach var="${a}" val="v"&gt;
+<:foreach var="${a}" val="v">
     ...
-&lt;/:foreach&gt;
+</:foreach>
 ```
         </td>
         <td>
@@ -302,9 +302,9 @@ foreach($a as $v) {
 Creates an IF condition.
 Syntax:
 ```html
-&lt;:if test="..."&gt;
+<:if test="...">
     ...
-&lt;/:if&gt;
+</:if>
 ```
 <p class="highlighted">Tag must not be closed if folowed by a [:else](#tag-#:elseif">:elseif</a> or <a href="#:else).
 Attributes:
@@ -350,9 +350,9 @@ Examples how this tag is compiled into PHP:
     <tr>
         <td>
             ```html
-&lt;:if test="${x}==2"&gt;
+<:if test="${x}==2">
     ...
-&lt;/:if&gt;
+</:if>
 ```
         </td>
         <td>
@@ -371,9 +371,9 @@ Creates an ELSE IF condition.
 
 Syntax:
 ```html
-&lt;:elseif test="..."&gt;
+<:elseif test="...">
     ...
-&lt;/:if&gt;
+</:if>
 ```
 <p class="highlighted">Tag must not be closed if folowed by a [:else](#tag-#:elseif">:elseif</a> or <a href="#:else).
 Attributes:
@@ -418,9 +418,9 @@ Examples how this tag is compiled into PHP:
     <tr>
         <td>
             ```html
-&lt;:elseif test="${x}==2"&gt;
+<:elseif test="${x}==2">
     ...
-&lt;/:if&gt;
+</:if>
 ```
         </td>
         <td>
@@ -438,9 +438,9 @@ Examples how this tag is compiled into PHP:
 Creates an ELSE condition.
 Syntax:
 ```html
-&lt;:else&gt;
+<:else>
     ...
-&lt;/:if&gt;
+</:if>
 ```
 Examples how this tag is compiled into PHP:
 <table class="compilation">
@@ -448,9 +448,9 @@ Examples how this tag is compiled into PHP:
     <tr>
         <td>
             ```html
-&lt;:else&gt;
+<:else>
     ...
-&lt;/:if&gt;
+</:if>
 ```
         </td>
         <td>
@@ -469,7 +469,7 @@ Examples how this tag is compiled into PHP:
 Sets a value to a variable.
 Syntax:
 ```html
-&lt;:set var="..." val="..."/&gt;
+<:set var="..." val="..."/>
 ```
 Attributes:
 <table>
@@ -527,7 +527,7 @@ Examples how this tag is compiled into PHP:
     <tr>
         <td>
             ```html
-&lt;:set var="a" val="10"/&gt;
+<:set var="a" val="10"/>
 ```
         </td>
         <td>
@@ -543,7 +543,7 @@ $a = "10";
     Removes variable from memory.
 Syntax:
 ```html
-&lt;:unset var="..."/&gt;
+<:unset var="..."/>
 ```
 Attributes:
 <table>
@@ -587,7 +587,7 @@ Examples how this tag is compiled into PHP:
     <tr>
         <td>
             ```html
-&lt;:unset name="a"/&gt;
+<:unset name="a"/>
 ```
         </td>
         <td>
@@ -603,9 +603,9 @@ unset($a);
     Creates a WHILE loop.
 Syntax:
 ```html
-&lt;:while test="..."&gt;
+<:while test="...">
     ...
-&lt;/:while&gt;
+</:while>
 ```
 Attributes:
 <table>
@@ -649,9 +649,9 @@ Examples how this tag is compiled into PHP:
     <tr>
         <td>
             ```html
-&lt;:while test="${x}==2"&gt;
+<:while test="${x}==2">
     ...
-&lt;/:while&gt;
+</:while>
 ```
         </td>
         <td>
@@ -669,7 +669,7 @@ while($x==2) {
     Breaks a FOR/FOR EACH/WHILE loop.
 Syntax:
 ```html
-&lt;:break/&gt;
+<:break/>
 ```
 Examples how this tag is compiled into PHP:
 <table class="compilation">
@@ -677,7 +677,7 @@ Examples how this tag is compiled into PHP:
     <tr>
         <td>
             ```html
-&lt;:break/&gt;
+<:break/>
 ```
         </td>
         <td>
@@ -693,7 +693,7 @@ break;
     Ignores code after within a FOR/FOR EACH/WHILE loop step.
 Syntax:
 ```html
-&lt;:continue/&gt;
+<:continue/>
 ```
 Examples how this tag is compiled into PHP:
 <table class="compilation">
@@ -701,7 +701,7 @@ Examples how this tag is compiled into PHP:
     <tr>
         <td>
             ```html
-&lt;:continue/&gt;
+<:continue/>
 ```
         </td>
         <td>
