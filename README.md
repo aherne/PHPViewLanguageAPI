@@ -347,7 +347,7 @@ Then above file is loaded in output buffer and bound with $data, so the final HT
 
 ## Reference Guide
 
-This is a reference tags describing all tags that come along with API.
+Below all [macro tags](#macro-tags) and [standard tags](#standard-tags) that come along with API are documented in great detail.
 
 ### tag escape
 
