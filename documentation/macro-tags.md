@@ -72,5 +72,5 @@ Examples how this tag is compiled into PHP:
 
 | ViewLanguage Example | PHP Translation |
 | --- | --- |
-| &lt;namespace taglib="foo" folder="bar"/&gt;<br/>...<br/>&lt;foo:baz attr="1"/&gt; | ...<br/>require_once($tagsFolder."/foo/bar.html") |
+| &lt;namespace taglib="foo" folder="bar"/&gt;<br/>...<br/>&lt;foo:baz attr="1"/&gt; | ...<br/>$contents = file_get_contents($tagsFolder."/bar/foo/baz.html"); <br/>// replaces attributes with values |
 
