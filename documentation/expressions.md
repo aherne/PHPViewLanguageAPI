@@ -1,6 +1,8 @@
 An expression is a ViewLanguage representation of a *scripting variable*. Syntax for an expression is:
 
-```html ${variableName} ```
+```html
+${variableName}
+```
 where **variableName** can be:
 
 | Description | ViewLanguage Example | PHP Translation |
