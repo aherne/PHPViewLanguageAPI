@@ -25,6 +25,7 @@ Marks tag body to be ignored by ViewLanguage compiler.Syntax:
 ...
 </escape>
 ```
+
 Examples how this tag is compiled into PHP:
 
 | ViewLanguage Example | PHP Translation |
@@ -43,17 +44,18 @@ Attributes:
 
 | Name | Mandatory | Data Type | Description |
 | --- | --- | --- | --- |
-| file | Y | string | Name of file whose sources should replace tag declaration. File will be located using extension & template folder supplied to compiler. When sources are parsed, same operation repeats recursively until no import tags are left. |
+| file | Y | string | Location of file whose sources should replace tag declaration relative to views folder supplied to compiler |
 
-Example:
 
-```html
-<import file="header"/>
-```
+Examples how this tag is compiled into PHP:
+
+| ViewLanguage Example | PHP Translation |
+| --- | --- |
+| &lt;import file="header"/&gt; | require_once($viewsFolder."/header.html") |
 
 ## namespace
 
-Marks custom location of user defined tag library. Syntax:
+Marks custom location of user defined tag library (must be placed BEFORE latter declaration). Syntax:
 
 ```html
 <namespace taglib="..." folder="..."/>
@@ -64,10 +66,11 @@ Attributes:
 | Name | Mandatory | Data Type | Description |
 | --- | --- | --- | --- |
 | taglib | Y | string | Name of tag library to look for. |
-| folder | Y | string | Location on disk (absolute or relative to project) where to look for tags (files) in library. |
+| folder | Y | string | Location of folder tag library should be looked for relative to tags folder supplied to compiler |
 
-Example:
+Examples how this tag is compiled into PHP:
 
-```html
-<namespace taglib="foo" folder="bar"/>
-```
+| ViewLanguage Example | PHP Translation |
+| --- | --- |
+| &lt;namespace taglib="foo" folder="bar"/&gt;<br/>...<br/>&lt;foo:baz attr="1"/&gt; | ...<br/>require_once($tagsFolder."/foo/bar.html") |
+
