@@ -1,7 +1,7 @@
 These are tags that work in a way similar to C macros: before code is compiled, they are read and "expanded" so that compilation will run on a full source. Syntax is identical to that of normal HTML tags:
 
 ```html
-&lt;name attribute="value" .../&gt;
+<NAME ATTRIBUTE="value" .../>
 ```
 Where:
 
@@ -21,9 +21,9 @@ At the moment, it is not possible for users to define their own macro tags!
 Marks tag body to be ignored by ViewLanguage compiler.Syntax:
 
 ```html
-&lt;escape&gt;
+<escape>
 ...
-&lt;/escape&gt;
+</escape>
 ```
 Examples how this tag is compiled into PHP:
 
