@@ -9,7 +9,7 @@ Table of contents:
 - [Compilation](#compilation)
 - [Installation](#installation)
 - [Unit Tests](#unit-tests)
-- [Examples](#unit-tests)
+- [Examples](#examples)
 - [Reference Guide](#reference-guide)
 
 ## About 
