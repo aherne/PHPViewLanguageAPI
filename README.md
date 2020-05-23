@@ -348,8 +348,6 @@ Then above file is loaded in output buffer and bound with $data, so the final HT
 
 ## Reference Guide
 
-Below all [macro tags](#macro-tags) and [standard tags](#standard-tags) that come along with API are documented in great detail.
-
 ### tag escape
 
 Marks tag body to be ignored by ViewLanguage compiler.Syntax:
