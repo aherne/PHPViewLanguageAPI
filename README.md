@@ -19,6 +19,7 @@ This API is the PHP compiler for ViewLanguage templating engine, a markup langua
 - interfacing variables through **[expressions](#expressions)**.
 - interfacing logics (control structures, repeating html segments) through **[tags](#tags)**
 
+![diagram](https://www.lucinda-framework.com/public/images/svg/view-language-api.svg)
 
 In order to achieve its goals, following steps need to be observed:
 
